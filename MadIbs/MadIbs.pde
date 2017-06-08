@@ -1,9 +1,12 @@
+import java.util.Map;
+
 PFont AdLibFont;
 PFont TimesNewRoman;
 
 int playButtonX, playButtonY, playButtonWidth, playButtonHeight;
 int createButtonX, createButtonY, createButtonWidth, createButtonHeight;
-int textFieldX, textFieldY, textFieldWidth, textFieldHeight;
+
+ArrayList<TextField> textFields = new ArrayList<TextField>();
 
 int state = 0;
 
@@ -15,9 +18,9 @@ ArrayList<String> wordTypes = new ArrayList<String>();
 String answers = "text here";
 ArrayList<String> newWords = new ArrayList<String>();
 
-String newWord;
-
 boolean isOverTextField = false;
+
+int int_increment = 0;
 
 void setup()
 {  size(400, 700);
@@ -79,18 +82,19 @@ void screen1()
   text("Fill out the quiz below with your very own words. \n Then,  click 'Create' to discover your very own story!", width/2, 50);
   line(100, 100, 300, 100);
   
+   
   textAlign(LEFT);
   for(int i = 0; i < wordTypes.size(); i++)
   {
-    textFieldWidth = 400;
-    textFieldHeight = 50;
-    textFieldX = 10;
-    textFieldY = height/2-250+30*i;
-    newWord = wordTypes.get(i) + ": "; 
-    text(newWord, textFieldX, textFieldY, textFieldWidth, textFieldHeight);
-    update(mouseX, mouseY, textFieldX, textFieldY, textFieldWidth, textFieldHeight);
-    
-    newWords.add(newWord);
+    fill(0, 0, 0);
+    TextField tf = new TextField(wordTypes.get(i) + ": ", 400, 50, 10, height/2-200+45*i);
+    if(overField(tf.getX(), tf.getY(), tf.getWidth(), tf.getHeight()))
+     {
+       fill(255, 0, 0);
+     }  
+    String str = tf.getType();
+    text(str, tf.getX(), tf.getY(), tf.getWidth(), tf.getHeight());
+    textFields.add(tf);
   }
 
   createButtonWidth = 300;
@@ -99,6 +103,7 @@ void screen1()
   createButtonY = height-playButtonHeight+30;
   
   textAlign(CENTER);
+  fill(0, 0, 0);
   rect(createButtonX, createButtonY, createButtonWidth, createButtonHeight);
   TimesNewRoman = createFont("Neuton-Regular.ttf", 30);
   textFont(TimesNewRoman);
@@ -117,9 +122,7 @@ void screen2()
   fill(0, 0, 0);
   textAlign(CENTER);
   text(storyTitle, 200, 70);
- 
-  finalStory = newWords.get(0);
-  text(finalStory, 0, 100);
+
   
   textFont(TimesNewRoman);
   textAlign(CENTER);
@@ -127,35 +130,25 @@ void screen2()
   text("finalStory", 200, 100);
 }
 
-void update(int x, int y, int fieldX, int fieldY, int fieldWidth, int fieldHeight)
-{
-  if(overField(fieldX, fieldY, fieldWidth, fieldHeight))
-  {
-    isOverTextField = true;
-  }
-  else
-  {
-    isOverTextField = false;
-  }
-}
-
 void keyPressed()
 {
+    String editing = textFields.get(int_increment).getType();
     if (keyCode == BACKSPACE) 
     {
-      if (newWord.length() > 0) 
-      {
-        newWord = newWord.substring(0, answers.length()-1);
-      }
+        editing = editing;
     }
     else if (keyCode == DELETE) 
     {
-      newWord = "";
+      editing = "";
     }   
-    else if (keyCode != SHIFT && keyCode != CONTROL && keyCode != ALT) 
+    else if (keyCode != SHIFT && keyCode != CONTROL && keyCode != ALT && keyCode != ENTER) 
     {
-      newWord = newWord + key;
-    }  
+      editing = editing + key;
+    }
+  else if(keyCode == ENTER)
+  {
+    int_increment++;
+  }
 }
 
 void mousePressed()
@@ -167,10 +160,7 @@ void mousePressed()
   else if(overField(createButtonX, createButtonY, createButtonWidth, createButtonHeight))
   {
     state = 2;
-  }
-  else if(isOverTextField)
-  {
-    print("clicked on text field!");
+    int_increment = 0;
   }
 }
 
@@ -180,5 +170,46 @@ boolean overField(int x, int y, int width, int height)  {
     return true;
   } else {
     return false;
+  }
+}
+
+class TextField
+{
+  String type;
+  int fieldWidth, fieldHeight, fieldX, fieldY;
+  
+  TextField(String str, int a, int b, int c, int d)
+  {
+    type = str; fieldWidth = a; fieldHeight = b; fieldX = c; fieldY = d;
+  }
+  
+  String getType()
+  {
+    return type;
+  }
+  
+ int getWidth()
+  {
+    return fieldWidth;
+  }
+  
+ int getHeight()
+  {
+    return fieldHeight;
+  }
+  
+ int getX()
+  {
+    return fieldX;
+  }
+  
+ int getY()
+  {
+    return fieldY;
+  }
+  
+  String toString()
+  {
+    return type + ": " + this.getX() + ", " + this.getY() + ", " + this.getWidth() + ", " + this.getHeight();
   }
 }
