@@ -94,9 +94,12 @@ void screen1()
   }
 
   cp5 = new ControlP5(this);
-  cp5.addTextfield("textInput_1").setPosition(20, 100).setSize(200, 40).setAutoClear(false);
-  cp5.addTextfield("textInput_2").setPosition(20, 170).setSize(200, 40).setAutoClear(false);
-  cp5.addBang("Submit").setPosition(240, 170).setSize(80, 40);    
+  for(int i = 0; i < wordTypes.size(); i++)
+  {
+     cp5.addTextfield("textInput_" + i).setPosition(200, 175+60*i).setSize(150, 40).setAutoClear(false);
+  }
+ 
+  cp5.addBang("Submit").setPosition(240, 570).setSize(80, 40);    
    
  createButtonWidth = 300;
   createButtonHeight = 50;
