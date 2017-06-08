@@ -1,4 +1,4 @@
-import java.util.Map;
+import controlP5.*;
 
 PFont AdLibFont;
 PFont TimesNewRoman;
@@ -6,7 +6,9 @@ PFont TimesNewRoman;
 int playButtonX, playButtonY, playButtonWidth, playButtonHeight;
 int createButtonX, createButtonY, createButtonWidth, createButtonHeight;
 
-ArrayList<TextField> textFields = new ArrayList<TextField>();
+ControlP5 cp5;
+String url1, url2, url3, url4, url5, url6;
+
 
 int state = 0;
 
@@ -14,8 +16,6 @@ String storyTitle, originalStory, finalStory;
 
 String[] lines;
 ArrayList<String> wordTypes = new ArrayList<String>();
-
-String answers = "text here";
 ArrayList<String> newWords = new ArrayList<String>();
 
 boolean isOverTextField = false;
@@ -35,7 +35,9 @@ void setup()
           p1 = lines[i].indexOf("(", p1 + 1);
         }
     }
+        
 }
+
 
 void draw()
 {  background(255); 
@@ -79,25 +81,24 @@ void screen1()
 {
   fill(0, 0, 0);
   textSize(20);
-  text("Fill out the quiz below with your very own words. \n Then,  click 'Create' to discover your very own story!", width/2, 50);
+  textAlign(LEFT);
+  text("Fill out the quiz below with your very own words. \n Then,  click 'Create' to discover your very own story!", 10, 50);
   line(100, 100, 300, 100);
   
    
   textAlign(LEFT);
-  for(int i = 0; i < wordTypes.size(); i++)
+  int j = wordTypes.size();
+  for(int i = 0; i < j; i++)
   {
-    fill(0, 0, 0);
-    TextField tf = new TextField(wordTypes.get(i) + ": ", 400, 50, 10, height/2-200+45*i);
-    if(overField(tf.getX(), tf.getY(), tf.getWidth(), tf.getHeight()))
-     {
-       fill(255, 0, 0);
-     }  
-    String str = tf.getType();
-    text(str, tf.getX(), tf.getY(), tf.getWidth(), tf.getHeight());
-    textFields.add(tf);
+    text(wordTypes.get(i), 10, 200+60*i);
   }
 
-  createButtonWidth = 300;
+  cp5 = new ControlP5(this);
+  cp5.addTextfield("textInput_1").setPosition(20, 100).setSize(200, 40).setAutoClear(false);
+  cp5.addTextfield("textInput_2").setPosition(20, 170).setSize(200, 40).setAutoClear(false);
+  cp5.addBang("Submit").setPosition(240, 170).setSize(80, 40);    
+   
+ createButtonWidth = 300;
   createButtonHeight = 50;
   createButtonX = width/2-playButtonWidth/2;
   createButtonY = height-playButtonHeight+30;
@@ -111,6 +112,16 @@ void screen1()
   text("Create", width/2, height-35);
 
 }
+
+void Submit() {
+     print("the following text was submitted :");
+  url1 = cp5.get(Textfield.class,"textInput_1").getText();
+  url2 = cp5.get(Textfield.class,"textInput_2").getText();
+  print(" textInput 1 = " + url1);
+  print(" textInput 2 = " + url2);
+  println();
+}
+
 
 void screen2()
 {
@@ -130,6 +141,7 @@ void screen2()
   text("finalStory", 200, 100);
 }
 
+/*
 void keyPressed()
 {
     String editing = textFields.get(int_increment).getType();
@@ -150,7 +162,7 @@ void keyPressed()
     int_increment++;
   }
 }
-
+*/
 void mousePressed()
 {
   if(overField(playButtonX, playButtonY, playButtonWidth, playButtonHeight))
@@ -160,7 +172,6 @@ void mousePressed()
   else if(overField(createButtonX, createButtonY, createButtonWidth, createButtonHeight))
   {
     state = 2;
-    int_increment = 0;
   }
 }
 
@@ -172,7 +183,7 @@ boolean overField(int x, int y, int width, int height)  {
     return false;
   }
 }
-
+/*
 class TextField
 {
   String type;
@@ -213,3 +224,5 @@ class TextField
     return type + ": " + this.getX() + ", " + this.getY() + ", " + this.getWidth() + ", " + this.getHeight();
   }
 }
+*/
+
